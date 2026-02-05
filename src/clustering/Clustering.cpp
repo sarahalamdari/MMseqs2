@@ -58,7 +58,7 @@ Clustering::Clustering(const std::string &seqDB, const std::string &seqDBIndex,
                 maxkey = key;
             }
             unsigned int lastKey = maxkey;
-            keyToSet = new unsigned int[lastKey+1];
+            keyToSet = new seqid_t[lastKey+1];
             std::vector<bool> keysInSeq(lastKey+1, false);
             std::map<unsigned int, unsigned int> setToLength;
 
@@ -78,9 +78,9 @@ Clustering::Clustering(const std::string &seqDB, const std::string &seqDBIndex,
             }
             unsigned int sourceLen = maxsetkey + 1;
             seqnum = setToLength.size();
-            sourceList = new(std::nothrow) unsigned int[lastKey];
+            sourceList = new(std::nothrow) seqid_t[lastKey];
             sourceOffsets = new(std::nothrow) size_t[sourceLen + 1]();
-            sourceLookupTable = new(std::nothrow) unsigned int *[sourceLen];
+            sourceLookupTable = new(std::nothrow) seqid_t *[sourceLen];
             size_t * sourceOffsetsDecrease = new(std::nothrow) size_t[sourceLen + 1]();
 
             mappingStream.close();
@@ -94,7 +94,7 @@ Clustering::Clustering(const std::string &seqDB, const std::string &seqDBIndex,
                 sourceOffsetsDecrease[setkey]++;
             }
             AlignmentSymmetry::computeOffsetFromCounts(sourceOffsets, sourceLen);
-            AlignmentSymmetry::setupPointers<unsigned int>(sourceList, sourceLookupTable, sourceOffsets, sourceLen, lastKey);
+            AlignmentSymmetry::setupPointers<seqid_t>(sourceList, sourceLookupTable, sourceOffsets, sourceLen, lastKey);
             
             mappingStream.close();
             mappingStream.open(seqDB + ".lookup");
@@ -108,7 +108,7 @@ Clustering::Clustering(const std::string &seqDB, const std::string &seqDBIndex,
                 if(keysInSeq[key] == 1) {
                     sourceList[order] = key;
                 } else {
-                    sourceList[order] = UINT_MAX;
+                    sourceList[order] = INVALID_ID;
                 }
                 sourceOffsetsDecrease[setkey]--;
             }
@@ -187,7 +187,7 @@ void Clustering::run(int mode) {
     }
     dbw->open();
 
-    std::pair<unsigned int, unsigned int> * ret;
+    std::pair<seqid_t, seqid_t> * ret;
     ClusteringAlgorithms *algorithm = new ClusteringAlgorithms(seqDbr, alnDbr,
                                                                threads, similarityScoreType,
                                                                maxIteration, keyToSet, sourceOffsets, sourceLookupTable, sourceList, seqnum, needSET);
@@ -234,26 +234,26 @@ void Clustering::run(int mode) {
 
 }
 
-void Clustering::writeData(DBWriter *dbw, const std::pair<unsigned int, unsigned int> * ret, size_t dbSize) {
+void Clustering::writeData(DBWriter *dbw, const std::pair<seqid_t, seqid_t> * ret, size_t dbSize) {
     std::string resultStr;
     resultStr.reserve(1024*1024*1024);
     char buffer[32];
-    unsigned int prevRepresentativeKey = UINT_MAX;
+    seqid_t prevRepresentativeKey = INVALID_ID;
     for(size_t i = 0; i < dbSize; i++){
-        unsigned int currRepresentativeKey = ret[i].first;
+        seqid_t currRepresentativeKey = ret[i].first;
         // write query key first
         if(prevRepresentativeKey != currRepresentativeKey) {
-            if(prevRepresentativeKey != UINT_MAX){ // skip first
+            if(prevRepresentativeKey != INVALID_ID){ // skip first
                 dbw->writeData(resultStr.c_str(), resultStr.length(), prevRepresentativeKey);
             }
             resultStr.clear();
-            char *outpos = Itoa::u32toa_sse2(currRepresentativeKey, buffer);
+            char *outpos = Itoa::u64toa_sse2(currRepresentativeKey, buffer);
             resultStr.append(buffer, (outpos - buffer - 1));
             resultStr.push_back('\n');
         }
-        unsigned int memberKey = ret[i].second;
+        seqid_t memberKey = ret[i].second;
         if(memberKey != currRepresentativeKey){
-            char * outpos = Itoa::u32toa_sse2(memberKey, buffer);
+            char * outpos = Itoa::u64toa_sse2(memberKey, buffer);
             resultStr.append(buffer, (outpos - buffer - 1) );
             resultStr.push_back('\n');
         }

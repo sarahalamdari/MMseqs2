@@ -5,6 +5,7 @@
 
 #include "DBReader.h"
 #include "DBWriter.h"
+#include "Types.h"
 
 class Clustering {
 public:
@@ -21,17 +22,17 @@ public:
 
 private:
 
-    void writeData(DBWriter *dbw, const std::pair<unsigned int, unsigned int> * ret, size_t dbSize);
+    void writeData(DBWriter *dbw, const std::pair<seqid_t, seqid_t> * ret, size_t dbSize);
 
     DBReader<unsigned int> *seqDbr;
     DBReader<unsigned int> *alnDbr;
 
     bool needSET;
     unsigned int seqnum;
-    unsigned int *keyToSet;
+    seqid_t *keyToSet;
     size_t *sourceOffsets;
-    unsigned int **sourceLookupTable;
-    unsigned int *sourceList;
+    seqid_t **sourceLookupTable;
+    seqid_t *sourceList;
 
     //values for affinity clustering
     unsigned int maxIteration;

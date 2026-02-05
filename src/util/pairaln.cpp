@@ -251,8 +251,8 @@ int pairaln(int argc, const char **argv, const Command& command) {
         output.reserve(100000);
         bool hasBacktrace = false;
         UniProtConverter converter;
-        unsigned int minResultDbKey = UINT_MAX;
-        Matcher::result_t emptyResult(UINT_MAX, 0, 0, 0, 0, 0,
+        dbkey_t minResultDbKey = DBKEY_MAX;
+        Matcher::result_t emptyResult(DBKEY_MAX, 0, 0, 0, 0, 0,
                                       0, UINT_MAX, 0, 0, UINT_MAX, 0, 0, "1M");
 #pragma omp for schedule(dynamic, 1)
         for (size_t fileNumber = 0; fileNumber < fileToIds.size(); fileNumber++) {

@@ -2,8 +2,14 @@
 #include "Parameters.h"
 #include "CommandDeclarations.h"
 #include "DownloadDatabase.h"
+#include "Types.h"
 
+// Index version: 64-bit builds are incompatible with 32-bit indexes
+#ifdef USE_64BIT_IDS
+const char* MMSEQS_CURRENT_INDEX_VERSION = "17-64bit";
+#else
 const char* MMSEQS_CURRENT_INDEX_VERSION = "16";
+#endif
 
 Parameters& par = Parameters::getInstance();
 std::vector<Command> baseCommands = {

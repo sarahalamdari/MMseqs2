@@ -99,6 +99,14 @@ if (HAVE_POSIX_FADVISE)
     target_compile_definitions(mmseqs-framework PUBLIC -DHAVE_POSIX_FADVISE=1)
 endif ()
 
+# 64-bit sequence ID support
+if (USE_64BIT_IDS)
+    target_compile_definitions(mmseqs-framework PUBLIC -DUSE_64BIT_IDS=1)
+    message("-- 64-bit sequence IDs enabled (supports >4 billion sequences)")
+else ()
+    message("-- 32-bit sequence IDs (default, supports up to ~4.3 billion sequences)")
+endif ()
+
 check_cxx_source_compiles("
         #include <stdlib.h>
         #include <fcntl.h>

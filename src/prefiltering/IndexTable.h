@@ -17,13 +17,14 @@
 #include "KmerGenerator.h"
 #include "Parameters.h"
 #include "FastSort.h"
+#include "Types.h"
 #include <stdlib.h>
 #include <algorithm>
 
 // IndexEntryLocal is an entry with position and seqId for a kmer
 // structure needs to be packed or it will need 8 bytes instead of 6
 struct __attribute__((__packed__)) IndexEntryLocal {
-    unsigned int seqId;
+    seqid_t seqId;
     unsigned short position_j;
     static bool comapreByIdAndPos(IndexEntryLocal first, IndexEntryLocal second){
         if(first.seqId < second.seqId )
@@ -40,10 +41,10 @@ struct __attribute__((__packed__)) IndexEntryLocal {
 
 struct __attribute__((__packed__)) IndexEntryLocalTmp {
     unsigned int kmer;
-    unsigned int seqId;
+    seqid_t seqId;
     unsigned short position_j;
 
-    IndexEntryLocalTmp(unsigned int kmer, unsigned int seqId, unsigned short position_j)
+    IndexEntryLocalTmp(unsigned int kmer, seqid_t seqId, unsigned short position_j)
             :kmer(kmer),seqId(seqId), position_j(position_j)
     {}
 

@@ -48,6 +48,23 @@ MMseqs2 requires an AMD or Intel 64-bit system (check with `uname -a | grep x86_
 > We recently added support for GPU-accelerated protein sequence and profile searches. This requires an NVIDIA GPU of the Ampere generation or newer for full speed, however, also works at reduced speed for Turing-generation GPUs. The bioconda- and precompiled binaries will not work on older GPU generations (e.g. Volta or Pascal).
 > Check the [wiki](https://github.com/soedinglab/MMseqs2/wiki#compile-from-source-for-linux-with-gpu-support) for instructions on how to get started.
 
+### Compiling with 64-bit sequence ID support
+
+By default, MMseqs2 uses 32-bit sequence IDs, which supports up to ~4.3 billion sequences per database. For databases exceeding this limit, MMseqs2 can be compiled with 64-bit sequence ID support:
+
+    # Clone and build with 64-bit IDs
+    git clone https://github.com/soedinglab/MMseqs2.git
+    cd MMseqs2
+    mkdir build && cd build
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DUSE_64BIT_IDS=ON
+    cmake --build . -j4
+    
+    # The binary is now at build/src/mmseqs
+    ./src/mmseqs version
+
+> [!IMPORTANT]
+> 64-bit builds create indexes that are **incompatible** with 32-bit builds (and vice versa). If you switch between build modes, you must recreate any precomputed indexes with `createindex`. The 64-bit build uses slightly more memory for k-mer indexes.
+
 MMseqs2 comes with a bash command and parameter auto completion, which can be activated by adding the following to your $HOME/.bash_profile:
 
 <pre>

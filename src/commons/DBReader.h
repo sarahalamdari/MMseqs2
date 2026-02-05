@@ -6,6 +6,7 @@
 // Manages DB read access.
 //
 #include "MemoryTracker.h"
+#include "Types.h"
 #include <cstddef>
 #include <utility>
 #include <vector>
