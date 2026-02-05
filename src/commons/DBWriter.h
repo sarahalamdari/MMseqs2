@@ -8,6 +8,7 @@
 
 #include "DBReader.h"
 #include "MemoryTracker.h"
+#include "Types.h"
 
 template <typename T> class DBReader;
 
@@ -35,11 +36,11 @@ public:
 
     void writeStart(unsigned int thrIdx = 0);
     size_t writeAdd(const char* data, size_t dataSize, unsigned int thrIdx = 0);
-    void writeEnd(unsigned int key, unsigned int thrIdx = 0, bool addNullByte = true, bool addIndexEntry = true);
+    void writeEnd(dbkey_t key, unsigned int thrIdx = 0, bool addNullByte = true, bool addIndexEntry = true);
 
-    void writeData(const char *data, size_t dataSize, unsigned int key, unsigned int threadIdx = 0, bool addNullByte = true, bool addIndexEntry = true);
+    void writeData(const char *data, size_t dataSize, dbkey_t key, unsigned int threadIdx = 0, bool addNullByte = true, bool addIndexEntry = true);
 
-    static size_t indexToBuffer(char *buff1, unsigned int key, size_t offsetStart, size_t len);
+    static size_t indexToBuffer(char *buff1, dbkey_t key, size_t offsetStart, size_t len);
 
     void alignToPageSize(int thrIdx = 0);
 
@@ -49,7 +50,7 @@ public:
                              const std::vector<std::pair<std::string, std::string>> &files,
                              bool lexicographicOrder = false);
 
-    void writeIndexEntry(unsigned int key, size_t offset, size_t length, unsigned int thrIdx);
+    void writeIndexEntry(dbkey_t key, size_t offset, size_t length, unsigned int thrIdx);
 
     static void writeDbtypeFile(const char* path, int dbtype, bool isCompressed);
 

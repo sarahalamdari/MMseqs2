@@ -328,7 +328,7 @@ size_t DBWriter::writeAdd(const char* data, size_t dataSize, unsigned int thrIdx
     return totalWriten;
 }
 
-void DBWriter::writeEnd(unsigned int key, unsigned int thrIdx, bool addNullByte, bool addIndexEntry) {
+void DBWriter::writeEnd(dbkey_t key, unsigned int thrIdx, bool addNullByte, bool addIndexEntry) {
     // close stream
     bool isCompressedDB = (mode & Parameters::WRITER_COMPRESSED_MODE) != 0;
     if(isCompressedDB) {
@@ -398,7 +398,7 @@ void DBWriter::writeEnd(unsigned int key, unsigned int thrIdx, bool addNullByte,
     }
 }
 
-void DBWriter::writeIndexEntry(unsigned int key, size_t offset, size_t length, unsigned int thrIdx){
+void DBWriter::writeIndexEntry(dbkey_t key, size_t offset, size_t length, unsigned int thrIdx){
     char buffer[1024];
     size_t len = indexToBuffer(buffer, key, offset, length );
     size_t written = fwrite(buffer, sizeof(char), len, indexFiles[thrIdx]);
@@ -409,15 +409,15 @@ void DBWriter::writeIndexEntry(unsigned int key, size_t offset, size_t length, u
 }
 
 
-void DBWriter::writeData(const char *data, size_t dataSize, unsigned int key, unsigned int thrIdx, bool addNullByte, bool addIndexEntry) {
+void DBWriter::writeData(const char *data, size_t dataSize, dbkey_t key, unsigned int thrIdx, bool addNullByte, bool addIndexEntry) {
     writeStart(thrIdx);
     writeAdd(data, dataSize, thrIdx);
     writeEnd(key, thrIdx, addNullByte, addIndexEntry);
 }
 
-size_t DBWriter::indexToBuffer(char *buff1, unsigned int key, size_t offsetStart, size_t len){
+size_t DBWriter::indexToBuffer(char *buff1, dbkey_t key, size_t offsetStart, size_t len){
     char * basePos = buff1;
-    char * tmpBuff = Itoa::u32toa_sse2(static_cast<uint32_t>(key), buff1);
+    char * tmpBuff = Itoa::u64toa_sse2(static_cast<uint64_t>(key), buff1);
     *(tmpBuff-1) = '\t';
     tmpBuff = Itoa::u64toa_sse2(static_cast<uint64_t>(offsetStart), tmpBuff);
     *(tmpBuff-1) = '\t';

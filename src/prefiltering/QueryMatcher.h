@@ -11,6 +11,7 @@
 #include "CacheFriendlyOperations.h"
 #include "UngappedAlignment.h"
 #include "KmerGenerator.h"
+#include "Types.h"
 
 
 struct statistics_t{
@@ -31,7 +32,7 @@ struct statistics_t{
 };
 
 struct hit_t {
-    unsigned int seqId;
+    seqid_t seqId;
     int prefScore;
     unsigned short diagonal;
 

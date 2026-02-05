@@ -21,6 +21,7 @@ set(USE_SYSTEM_ZSTD 0 CACHE BOOL "Use zstd provided by system instead of bundled
 set(IGNORE_RUST_VERSION 0 CACHE BOOL "Ignore Rust version check")
 set(ENABLE_CUDA 0 CACHE BOOL "Enable CUDA")
 set(FORCE_STATIC_DEPS 0 CACHE BOOL "Force static linking of deps")
+set(USE_64BIT_IDS 0 CACHE BOOL "Use 64-bit sequence IDs for databases with >4 billion sequences")
 
 if(FORCE_STATIC_DEPS)
     if(ENABLE_CUDA)

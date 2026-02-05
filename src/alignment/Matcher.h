@@ -17,6 +17,7 @@
 #include "StripedSmithWaterman.h"
 #include "EvalueComputation.h"
 #include "BandedNucleotideAligner.h"
+#include "Types.h"
 
 class Matcher{
 
@@ -30,7 +31,7 @@ public:
     const static int ALN_RES_WITH_ORF_AND_BT_COL_CNT = 15;
 
     struct result_t {
-        unsigned int dbKey;
+        dbkey_t dbKey;
         int score;
         float qcov;
         float dbcov;
@@ -48,7 +49,7 @@ public:
         int dbOrfStartPos;
         int dbOrfEndPos;
         std::string backtrace;
-        result_t(unsigned int dbkey,int score,
+        result_t(dbkey_t dbkey,int score,
                  float qcov, float dbcov,
                  float seqId, double eval,
                  unsigned int alnLength,
@@ -70,7 +71,7 @@ public:
                                           dbOrfStartPos(dbOrfStartPos), dbOrfEndPos(dbOrfEndPos),
                                           backtrace(backtrace) {};
 
-        result_t(unsigned int dbkey,int score,
+        result_t(dbkey_t dbkey,int score,
                  float qcov, float dbcov,
                  float seqId, double eval,
                  unsigned int alnLength,

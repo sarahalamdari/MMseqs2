@@ -4,6 +4,7 @@
 #include "DBWriter.h"
 #include "Parameters.h"
 #include "BaseMatrix.h"
+#include "Types.h"
 
 #include <queue>
 
@@ -49,7 +50,7 @@ struct SequencePosition{
 template <typename T>
 struct __attribute__((__packed__))KmerPosition {
     size_t kmer;
-    unsigned int id;
+    seqid_t id;
     T seqLen;
     T pos;
 
@@ -133,7 +134,7 @@ struct __attribute__((__packed__))KmerPosition {
 
 
 struct __attribute__((__packed__)) KmerEntry {
-    unsigned int seqId;
+    seqid_t seqId;
     short diagonal;
     unsigned char score;
     void setReverse(bool ){
@@ -145,7 +146,7 @@ struct __attribute__((__packed__)) KmerEntry {
 };
 
 struct __attribute__((__packed__)) KmerEntryRev {
-    unsigned int seqId;
+    seqid_t seqId;
     short diagonal;
     unsigned char score;
     unsigned char rev;
@@ -159,15 +160,15 @@ struct __attribute__((__packed__)) KmerEntryRev {
 
 struct FileKmerPosition {
     size_t repSeq;
-    unsigned int id;
+    seqid_t id;
     short pos;
     unsigned char score;
     unsigned int file;
     char reverse;
     FileKmerPosition(){}
-    FileKmerPosition(size_t repSeq, unsigned int id,short pos, unsigned char score, unsigned int file):
+    FileKmerPosition(size_t repSeq, seqid_t id,short pos, unsigned char score, unsigned int file):
             repSeq(repSeq), id(id), pos(pos), score(score), file(file), reverse(0) {}
-    FileKmerPosition(size_t repSeq, unsigned int id,short pos, unsigned char score, char reverse, unsigned int file):
+    FileKmerPosition(size_t repSeq, seqid_t id,short pos, unsigned char score, char reverse, unsigned int file):
             repSeq(repSeq), id(id), pos(pos), score(score), file(file), reverse(reverse) {}
 };
 

@@ -975,6 +975,12 @@ template<>
 void DBReader<unsigned int>::readIndexId(unsigned int* id, char*, const char** cols) {
     *id = Util::fast_atoi<unsigned int>(cols[0]);
 }
+#ifdef USE_64BIT_IDS
+template<>
+void DBReader<uint64_t>::readIndexId(uint64_t* id, char*, const char** cols) {
+    *id = Util::fast_atoi<uint64_t>(cols[0]);
+}
+#endif
 
 template<>
 unsigned int DBReader<std::string>::indexIdToNum(std::string * id){
@@ -984,6 +990,12 @@ template<>
 unsigned int DBReader<unsigned int>::indexIdToNum(unsigned int * id) {
     return *id;
 }
+#ifdef USE_64BIT_IDS
+template<>
+unsigned int DBReader<uint64_t>::indexIdToNum(uint64_t * id) {
+    return static_cast<unsigned int>(*id);
+}
+#endif
 
 template <typename T> void DBReader<T>::unmapData() {
     if (dataMapped == true) {
@@ -1363,3 +1375,6 @@ void DBReader<T>::decomposeDomainByAminoAcid(size_t worldRank, size_t worldSize,
 
 template class DBReader<unsigned int>;
 template class DBReader<std::string>;
+#ifdef USE_64BIT_IDS
+template class DBReader<uint64_t>;
+#endif

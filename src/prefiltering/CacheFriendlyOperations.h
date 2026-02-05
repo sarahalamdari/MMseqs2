@@ -2,6 +2,7 @@
 #define COUNTIN32ARRAY_H
 
 #include "IndexTable.h"
+#include "Types.h"
 
 #define IS_REPRESENTIBLE_IN_D_BITS(D, N) \
   (((unsigned long) N >= (1UL << (D - 1)) && (unsigned long) N < (1UL << D)) ? D : -1)
@@ -44,7 +45,7 @@
    )
 
 struct __attribute__((__packed__)) CounterResult {
-    unsigned int id;
+    seqid_t id;
     unsigned short diagonal;
     unsigned char count;
 
